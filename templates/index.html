@@ -1,0 +1,299 @@
+{% extends "base.html" %}
+
+{% block title %}ComplexLab - Complex Number Calculator & Complex Plane{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+  <div class="hero-container">
+    <h1 class="hero-title">Complex Number Calculator</h1>
+    <p class="hero-tagline">Explore Complex Numbers. Solve with Confidence.</p>
+    <p class="hero-description">
+      Perform rigorous mathematical calculations across rectangular, polar, and exponential representations with step-by-step proofs and interactive geometric visualization on the complex plane.
+    </p>
+    <div class="hero-badges">
+      <span class="hero-badge">📐 Exact & Numerical Arithmetic</span>
+      <span class="hero-badge">🧭 Dynamic Complex Plane</span>
+      <span class="hero-badge">📝 Step-by-Step Derivations</span>
+      <span class="hero-badge">🔒 Safe AST Mathematical Parser</span>
+    </div>
+  </div>
+</section>
+
+<!-- Calculator & Visualization Layout Grid -->
+<div class="calc-grid" style="margin-top: 1.75rem;">
+
+  <!-- Left Column: Interactive Calculator -->
+  <div class="calc-card card">
+    <div class="card-header">
+      <h2 class="card-title">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        Mathematical Calculator
+      </h2>
+      <!-- Input Mode Toggle -->
+      <div class="mode-selector">
+        <button type="button" class="mode-tab active" data-mode="expression">Mode B: Expression</button>
+        <button type="button" class="mode-tab" data-mode="rectangular">Mode A: Rectangular</button>
+      </div>
+    </div>
+
+    <!-- Example Presets Selector -->
+    <div class="preset-dropdown-wrapper">
+      <label for="presetSelect" style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Quick Preset:</label>
+      <select id="presetSelect" class="preset-select">
+        <option value="">-- Choose an interesting example --</option>
+        <option value="mult_demo">Multiplication: (3 + 4i) × (2 - i)</option>
+        <option value="div_demo">Division: (3 + 4i) / (1 - 2i)</option>
+        <option value="power_demo">Integer Power: (1 + i)⁸</option>
+        <option value="power_i_demo">Powers of i: i¹⁰⁵</option>
+        <option value="roots_unity_demo">5-th Roots of Unity</option>
+        <option value="sqrt_demo">Square Roots: √(-4 + 3i)</option>
+        <option value="conj_identities">Verify Identities: z = 3 - 4i</option>
+        <option value="quadratic_demo">Quadratic Equation: z² - 2z + 5 = 0</option>
+        <option value="linear_demo">Linear Equation: (2 + i)z + 3 = 4 - i</option>
+      </select>
+    </div>
+
+    <!-- Operation Category Tabs -->
+    <div class="category-tabs">
+      <button type="button" class="cat-btn active" data-category="arithmetic">Arithmetic</button>
+      <button type="button" class="cat-btn" data-category="conjugate_modulus">Conjugate & Modulus</button>
+      <button type="button" class="cat-btn" data-category="polar">Polar & Exponential</button>
+      <button type="button" class="cat-btn" data-category="powers_roots">Powers & Roots</button>
+      <button type="button" class="cat-btn" data-category="advanced">Advanced & Equations</button>
+    </div>
+
+    <!-- Operations Grid -->
+    <div class="operation-grid" id="operationGrid">
+      <!-- Populated dynamically by calculator.js -->
+    </div>
+
+    <!-- Inputs Container -->
+    <div class="inputs-section">
+
+      <!-- Standard Inputs (z1 and z2) -->
+      <div id="standardInputs">
+        <!-- MODE B: Expression Inputs -->
+        <div id="expressionInputs" style="display: flex; flex-direction: column; gap: 0.85rem;">
+          <div class="input-group">
+            <div class="input-label-row">
+              <label for="inputZ1" class="input-label">Complex Number z₁</label>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">e.g. 3+4i, 2-i, -5i, 1/2+3/4i</span>
+            </div>
+            <div class="input-field-wrapper">
+              <input type="text" id="inputZ1" class="math-input" placeholder="e.g. 3 + 4i" value="3 + 4i" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+
+          <div class="input-group" id="z2GroupExpr">
+            <div class="input-label-row">
+              <label for="inputZ2" class="input-label">Complex Number z₂</label>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Second operand</span>
+            </div>
+            <div class="input-field-wrapper">
+              <input type="text" id="inputZ2" class="math-input" placeholder="e.g. 2 - i" value="2 - i" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+        </div>
+
+        <!-- MODE A: Rectangular Inputs -->
+        <div id="rectangularInputs" style="display: none; flex-direction: column; gap: 0.85rem;">
+          <div class="input-group">
+            <label class="input-label">Complex Number z₁ = a + bi</label>
+            <div class="rect-inputs">
+              <input type="text" id="rectZ1Real" class="math-input rect-input" placeholder="Real (a)" value="3">
+              <span>+</span>
+              <input type="text" id="rectZ1Imag" class="math-input rect-input" placeholder="Imaginary (b)" value="4">
+              <span>i</span>
+            </div>
+          </div>
+
+          <div class="input-group" id="z2GroupRect">
+            <label class="input-label">Complex Number z₂ = c + di</label>
+            <div class="rect-inputs">
+              <input type="text" id="rectZ2Real" class="math-input rect-input" placeholder="Real (c)" value="2">
+              <span>+</span>
+              <input type="text" id="rectZ2Imag" class="math-input rect-input" placeholder="Imaginary (d)" value="-1">
+              <span>i</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extra Exponent / Root Input -->
+      <div id="extraInputs" style="display: none;" class="input-group">
+        <label id="extraInputLabel" for="inputExtraN" class="input-label">Degree n or Exponent k:</label>
+        <input type="number" id="inputExtraN" class="math-input" value="3" min="1" max="100">
+      </div>
+
+      <!-- Multi-Numbers Input -->
+      <div id="multiInputs" style="display: none;" class="input-group">
+        <label for="inputMultiNumbers" class="input-label">List of Complex Numbers (comma separated):</label>
+        <input type="text" id="inputMultiNumbers" class="math-input" placeholder="e.g. 1+2i, 3-i, 4+5i, -2i" value="1+2i, 3-i, 4+5i">
+      </div>
+
+      <!-- Equations Inputs (a, b, c) -->
+      <div id="eqInputs" style="display: none;" class="input-group">
+        <span id="eqTitle" style="font-weight: 700; color: var(--accent-primary); font-size: 0.95rem; margin-bottom: 0.4rem;"></span>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+          <div>
+            <label class="input-label">Coefficient a:</label>
+            <input type="text" id="eqA" class="math-input" value="1">
+          </div>
+          <div>
+            <label class="input-label">Coefficient b:</label>
+            <input type="text" id="eqB" class="math-input" value="-2">
+          </div>
+          <div>
+            <label class="input-label">Constant c:</label>
+            <input type="text" id="eqC" class="math-input" value="5">
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Symbol Toolbar -->
+      <div class="symbol-bar">
+        <span class="sym-label">Insert:</span>
+        <button type="button" class="sym-btn" data-symbol="i">i</button>
+        <button type="button" class="sym-btn" data-symbol="j">j</button>
+        <button type="button" class="sym-btn" data-symbol="+">+</button>
+        <button type="button" class="sym-btn" data-symbol="-">−</button>
+        <button type="button" class="sym-btn" data-symbol="*">×</button>
+        <button type="button" class="sym-btn" data-symbol="/">÷</button>
+        <button type="button" class="sym-btn" data-symbol="^2">²</button>
+        <button type="button" class="sym-btn" data-symbol="pi">π</button>
+        <button type="button" class="sym-btn" data-symbol="(">(</button>
+        <button type="button" class="sym-btn" data-symbol=")">)</button>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="calc-actions">
+        <button type="button" class="btn btn-primary" id="btnCalculate">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/></svg>
+          Calculate Result
+        </button>
+        <button type="button" class="btn btn-secondary" id="btnSwap" title="Swap z₁ and z₂">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"/></svg>
+          Swap
+        </button>
+        <button type="button" class="btn btn-outline" id="btnClear" title="Clear all fields">
+          Clear
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Result Display Card -->
+    <div class="result-card" id="resultCard" style="display: none;">
+      <div class="result-header">
+        <span class="result-badge">Calculated Result</span>
+        <div class="result-actions">
+          <button type="button" class="btn btn-sm btn-outline" id="btnCopyResult" title="Copy Result">Copy</button>
+          <button type="button" class="btn btn-sm btn-outline" id="btnCopyLatex" title="Copy LaTeX">LaTeX</button>
+          <button type="button" class="btn btn-sm btn-outline" id="btnDownloadSolution" title="Download Text Solution">Download</button>
+        </div>
+      </div>
+
+      <!-- Main Result Text -->
+      <div class="result-main" id="resultMain">0</div>
+
+      <!-- All Mathematical Representations -->
+      <div class="result-representations">
+        <div class="rep-item">
+          <span class="rep-label">Rectangular Form (a + bi):</span>
+          <span class="rep-val" id="repRect">0</span>
+        </div>
+        <div class="rep-item">
+          <span class="rep-label">Polar Form (r, θ):</span>
+          <span class="rep-val" id="repPolar">r = 0, θ = 0</span>
+        </div>
+        <div class="rep-item">
+          <span class="rep-label">Exponential Form (r·e^(iθ)):</span>
+          <span class="rep-val" id="repExp">0</span>
+        </div>
+        <div class="rep-item">
+          <span class="rep-label">Trigonometric Form:</span>
+          <span class="rep-val" id="repTrig">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step-by-Step Derivation Card -->
+    <div class="card steps-card" id="stepsCard" style="display: none;">
+      <div class="card-header" style="margin-bottom: 0.5rem; padding-bottom: 0.5rem;">
+        <h3 class="card-title" style="font-size: 1rem;">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+          Step-by-Step Mathematical Explanation
+        </h3>
+        <button type="button" class="steps-toggle-btn" id="btnToggleSteps">
+          <span class="toggle-arrow">▼</span> Toggle
+        </button>
+      </div>
+
+      <div class="steps-list" id="stepsList">
+        <!-- Rendered dynamically by calculator.js with MathJax -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Column: Interactive Plane & Calculation History -->
+  <div style="display: flex; flex-direction: column; gap: 1.75rem;">
+
+    <!-- Complex Plane Visualization Card -->
+    <div class="plane-card card">
+      <div class="card-header">
+        <h2 class="card-title">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/></svg>
+          Interactive Complex Plane
+        </h2>
+        <div class="plane-btn-group">
+          <button type="button" class="btn btn-sm btn-outline" title="Zoom In" onclick="window.calculatorApp.plane.zoom(1.2)">+</button>
+          <button type="button" class="btn btn-sm btn-outline" title="Zoom Out" onclick="window.calculatorApp.plane.zoom(0.83)">−</button>
+          <button type="button" class="btn btn-sm btn-outline" title="Reset View" onclick="window.calculatorApp.plane.resetView(true)">Reset</button>
+        </div>
+      </div>
+
+      <!-- Canvas Container -->
+      <div class="canvas-container">
+        <canvas id="planeCanvas"></canvas>
+        <div class="plane-tooltip" id="planeTooltip"></div>
+      </div>
+
+      <!-- Plane Legend -->
+      <div class="plane-legend">
+        <div class="legend-item"><span class="legend-dot dot-z1"></span> z₁ (Input 1)</div>
+        <div class="legend-item"><span class="legend-dot dot-z2"></span> z₂ (Input 2)</div>
+        <div class="legend-item"><span class="legend-dot dot-res"></span> Result</div>
+        <div class="legend-item"><span class="legend-dot dot-root"></span> Roots / Polygon</div>
+      </div>
+    </div>
+
+    <!-- Recent Calculations History Card -->
+    <div class="card history-card" style="margin-top: 0;">
+      <div class="card-header">
+        <h3 class="card-title">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          Recent Calculations
+        </h3>
+        <div style="display: flex; gap: 0.35rem;">
+          <button type="button" class="btn btn-sm btn-outline" onclick="window.historyManager.exportHistory()" title="Export history to text file">Export</button>
+          <button type="button" class="btn btn-sm btn-outline" style="color: var(--accent-danger);" onclick="window.historyManager.clearHistory()" title="Clear all history">Clear</button>
+        </div>
+      </div>
+
+      <div class="history-list" id="historyList">
+        <!-- Rendered dynamically by history.js -->
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/visualization.js') }}"></script>
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+<script src="{{ url_for('static', filename='js/calculator.js') }}"></script>
+{% endblock %}
