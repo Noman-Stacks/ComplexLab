@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}ComplexLab - About & Mathematical Conventions{% endblock %}
+
+{% block content %}
+<div style="max-width: 860px; margin: 1.5rem auto 3rem; display: flex; flex-direction: column; gap: 2rem;">
+
+  <div style="text-align: center;">
+    <h1 class="hero-title" style="font-size: 2.2rem; margin-bottom: 0.5rem;">About ComplexLab</h1>
+    <p class="hero-tagline">"Explore Complex Numbers. Solve with Confidence."</p>
+    <p style="color: var(--text-secondary); max-width: 650px; margin: 0 auto;">
+      A professional, production-quality educational mathematics platform built to provide exact and numerical complex calculations, rigorous step-by-step proofs, and interactive Argand plane visualization.
+    </p>
+  </div>
+
+  <!-- Mathematical Conventions Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">📐 Mathematical Standards & Conventions</h2>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+      <p>
+        <strong>1. Representation of Complex Numbers:</strong> A complex number is represented as $z = a + bi$, where $a = \text{Re}(z) \in \mathbb{R}$ is the real part, $b = \text{Im}(z) \in \mathbb{R}$ is the imaginary part, and $i$ satisfies the fundamental algebraic identity $i^2 = -1$.
+      </p>
+      <p>
+        <strong>2. Principal Argument Convention:</strong> The principal argument $\text{Arg}(z)$ is chosen within the standard mathematical interval $(-\pi, \pi]$ radians (equivalent to $(-180^\circ, 180^\circ]$). For the zero complex number $z = 0 + 0i$, the modulus $|z| = 0$ is defined, but the argument is mathematically undefined.
+      </p>
+      <p>
+        <strong>3. Roots and Branch Cuts:</strong> Every nonzero complex number $z = r e^{i\theta}$ has exactly $n$ distinct $n$-th roots:
+        $$w_k = r^{1/n} \exp\left(i \frac{\theta + 2k\pi}{n}\right), \quad k = 0, 1, \dots, n-1$$
+        The principal $n$-th root corresponds to $k = 0$.
+      </p>
+      <p>
+        <strong>4. Multiplicative Inverse:</strong> The reciprocal $z^{-1} = 1/z$ exists for all $z \in \mathbb{C} \setminus \{0\}$ and satisfies the identity $z \cdot z^{-1} = 1$. Division by the zero complex number is strictly rejected with a clear mathematical error.
+      </p>
+    </div>
+  </div>
+
+  <!-- Architectural Design Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">⚙️ Architecture & Security</h2>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 1rem; color: var(--text-secondary); font-size: 0.95rem;">
+      <p>
+        <strong>Zero eval() Policy:</strong> ComplexLab rejects arbitrary code execution. All mathematical expressions are parsed using Python's Abstract Syntax Tree (AST) compiler with a strict whitelist of arithmetic operations, numbers, and constants ($i, j, \pi, e$).
+      </p>
+      <p>
+        <strong>High-DPI Vector Canvas:</strong> The interactive complex plane is rendered natively using the HTML5 Canvas API with Retina device pixel ratio scaling, eliminating external rendering latency and delivering smooth real-time drag, pan, and zoom operations.
+      </p>
+      <p>
+        <strong>Client-Side Privacy:</strong> Calculation history and user theme preferences are stored exclusively inside your browser's <code>localStorage</code>. No personal data, tracking cookies, or external AI API keys are required.
+      </p>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Card -->
+  <div class="card">
+    <div class="card-header">
+      <h2 class="card-title">⌨️ Keyboard Navigation Guide</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">
+      <div style="background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+        <strong>Enter:</strong> Evaluates the active calculation when focused in an input field.
+      </div>
+      <div style="background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+        <strong>Mouse Wheel:</strong> Zooms in and out dynamically on the Complex Plane.
+      </div>
+      <div style="background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+        <strong>Click & Drag:</strong> Pans the Complex Plane canvas in any direction.
+      </div>
+      <div style="background: var(--bg-tertiary); padding: 0.75rem 1rem; border-radius: var(--radius-md);">
+        <strong>?:</strong> Opens the keyboard shortcuts modal from anywhere on the platform.
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
