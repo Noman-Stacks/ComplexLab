@@ -1,0 +1,607 @@
+{% extends "base.html" %}
+
+{% block title %}ComplexLab - Mathematics Learning Center{% endblock %}
+
+{% block head_extra %}
+<style>
+  .learn-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 1.5rem;
+  }
+
+  .lesson-sidebar {
+    position: sticky;
+    top: 80px;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    max-height: calc(100vh - 100px);
+    overflow-y: auto;
+  }
+
+  .lesson-nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .lesson-nav-item a {
+    display: block;
+    padding: 0.45rem 0.75rem;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .lesson-nav-item a:hover {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-primary);
+  }
+
+  .lesson-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .lesson-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem;
+    box-shadow: var(--shadow-sm);
+    scroll-margin-top: 90px;
+  }
+
+  .lesson-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    background-color: rgba(99, 102, 241, 0.1);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    margin-bottom: 0.5rem;
+  }
+
+  .lesson-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+  }
+
+  .lesson-def {
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .lesson-formula-box {
+    background-color: var(--bg-tertiary);
+    border-left: 4px solid var(--accent-primary);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1.25rem;
+    margin-bottom: 1.25rem;
+    font-size: 1.05rem;
+    overflow-x: auto;
+  }
+
+  .lesson-section-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+    color: var(--text-primary);
+  }
+
+  .worked-example-box {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.925rem;
+  }
+
+  .mistakes-box {
+    background-color: rgba(239, 68, 68, 0.08);
+    border-left: 4px solid var(--accent-danger);
+    border-radius: var(--radius-sm);
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.25rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+  }
+
+  @media (max-width: 900px) {
+    .learn-layout {
+      grid-template-columns: 1fr;
+    }
+    .lesson-sidebar {
+      position: static;
+      max-height: 250px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="hero" style="padding: 2rem 1rem 1.5rem;">
+  <div class="hero-container">
+    <h1 class="hero-title">Mathematics Learning Center</h1>
+    <p class="hero-tagline">Master Complex Analysis Concepts with Rigor & Clarity</p>
+    <p class="hero-description">
+      Twenty concise, mathematically verified lessons covering fundamental definitions, algebraic properties, polar & exponential forms, De Moivre's theorem, and geometry on the complex plane.
+    </p>
+  </div>
+</section>
+
+<div class="learn-layout">
+
+  <!-- Sidebar Table of Contents -->
+  <aside class="lesson-sidebar">
+    <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.75rem; color: var(--text-primary);">
+      📚 Lessons Index
+    </div>
+    <ul class="lesson-nav-list">
+      <li class="lesson-nav-item"><a href="#lesson-1">1. Introduction to Complex Numbers</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-2">2. The Imaginary Unit i</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-3">3. Real and Imaginary Parts</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-4">4. Equality of Complex Numbers</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-5">5. Addition and Subtraction</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-6">6. Multiplication</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-7">7. Division Using Conjugates</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-8">8. Complex Conjugates</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-9">9. Modulus (Absolute Value)</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-10">10. Argument & Principal Angle</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-11">11. Rectangular Representation</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-12">12. Polar Representation</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-13">13. Exponential Form & Euler</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-14">14. Powers of Complex Numbers</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-15">15. De Moivre's Theorem</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-16">16. Square Roots and N-th Roots</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-17">17. Roots of Unity</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-18">18. Reciprocal & Inverse</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-19">19. Complex Equations</a></li>
+      <li class="lesson-nav-item"><a href="#lesson-20">20. Geometric Interpretation</a></li>
+    </ul>
+  </aside>
+
+  <!-- Lesson Content Area -->
+  <div class="lesson-container">
+
+    <!-- Lesson 1 -->
+    <article class="lesson-card" id="lesson-1">
+      <span class="lesson-badge">Lesson 1</span>
+      <h2 class="lesson-title">Introduction to Complex Numbers</h2>
+      <p class="lesson-def">
+        A complex number is an element formed by combining a real quantity and an imaginary quantity. It extends the one-dimensional real number line to a complete two-dimensional mathematical field where algebraic equations such as $x^2 + 1 = 0$ possess complete solutions.
+      </p>
+      <div class="lesson-formula-box">
+        $$\mathbb{C} = \{z = a + bi \mid a, b \in \mathbb{R}, \ i^2 = -1\}$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>Consider $z = 3 + 4i$. Here, the real coefficient is $3$ and the imaginary coefficient is $4$. The number can also be represented as an ordered pair of real coordinates $(3, 4)$ on the Cartesian Argand plane.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Confusing the imaginary unit $i$ with a variable. In complex analysis, $i$ is not an unknown; it is a rigorously defined mathematical constant satisfying $i^2 = -1$.
+      </div>
+      <a href="/?preset=mult_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 2 -->
+    <article class="lesson-card" id="lesson-2">
+      <span class="lesson-badge">Lesson 2</span>
+      <h2 class="lesson-title">The Imaginary Unit i</h2>
+      <p class="lesson-def">
+        The imaginary unit, denoted by $i$ (or $j$ in electrical engineering), is defined as the solution to the equation $x^2 = -1$. Integer powers of $i$ exhibit an exact cyclical repetition with a period of 4.
+      </p>
+      <div class="lesson-formula-box">
+        $$i^0 = 1, \quad i^1 = i, \quad i^2 = -1, \quad i^3 = -i, \quad i^{4k + r} = i^r \quad (k \in \mathbb{Z})$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Simplifying $i^{105}$</div>
+        <p>Divide exponent 105 by 4: $105 = 4 \times 26 + 1$.<br>
+        Therefore, $i^{105} = (i^4)^{26} \times i^1 = 1^{26} \times i = i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Applying $\sqrt{a} \times \sqrt{b} = \sqrt{ab}$ when both numbers are negative. That identity holds only when at least one radicand is non-negative. $\sqrt{-1} \times \sqrt{-1} = i \times i = -1 \neq \sqrt{(-1)(-1)} = \sqrt{1} = 1$.
+      </div>
+      <a href="/?preset=power_i_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 3 -->
+    <article class="lesson-card" id="lesson-3">
+      <span class="lesson-badge">Lesson 3</span>
+      <h2 class="lesson-title">Real and Imaginary Parts</h2>
+      <p class="lesson-def">
+        Every complex number $z = a + bi$ has two distinct real components: the real part, denoted $\text{Re}(z) = a$, and the imaginary part, denoted $\text{Im}(z) = b$. Note that both $a$ and $b$ are strictly real numbers.
+      </p>
+      <div class="lesson-formula-box">
+        $$z = a + bi \implies \text{Re}(z) = a \in \mathbb{R}, \quad \text{Im}(z) = b \in \mathbb{R}$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>For $z = -5 + 7i$:<br>
+        $\text{Re}(z) = -5$<br>
+        $\text{Im}(z) = 7$ (note that the imaginary part is $7$, NOT $7i$).</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Writing $\text{Im}(z) = 7i$. By definition, the imaginary part is the real scalar multiplying $i$.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 4 -->
+    <article class="lesson-card" id="lesson-4">
+      <span class="lesson-badge">Lesson 4</span>
+      <h2 class="lesson-title">Equality of Complex Numbers</h2>
+      <p class="lesson-def">
+        Two complex numbers are mathematically equal if and only if their real parts are equal and their imaginary parts are equal. There is no natural total order on $\mathbb{C}$ (inequalities like $z_1 < z_2$ have no meaning).
+      </p>
+      <div class="lesson-formula-box">
+        $$a + bi = c + di \iff a = c \quad \text{and} \quad b = d$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Solve $(2x - 1) + 3iy = 5 + 9i$</div>
+        <p>Equating real parts: $2x - 1 = 5 \implies 2x = 6 \implies x = 3$.<br>
+        Equating imaginary parts: $3y = 9 \implies y = 3$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Trying to state that $2 + 3i > 1 + 4i$. The complex field cannot be given an ordered field structure compatible with arithmetic.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 5 -->
+    <article class="lesson-card" id="lesson-5">
+      <span class="lesson-badge">Lesson 5</span>
+      <h2 class="lesson-title">Addition and Subtraction</h2>
+      <p class="lesson-def">
+        Addition and subtraction of complex numbers operate component-wise. Combine the real components together, and separately combine the imaginary components together.
+      </p>
+      <div class="lesson-formula-box">
+        $$(a + bi) \pm (c + di) = (a \pm c) + (b \pm d)i$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>$(4 - 7i) - (-2 + 3i) = [4 - (-2)] + [-7 - 3]i = (4 + 2) + (-10)i = 6 - 10i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Forgetting to distribute the minus sign to both the real and imaginary parts of the subtrahend.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 6 -->
+    <article class="lesson-card" id="lesson-6">
+      <span class="lesson-badge">Lesson 6</span>
+      <h2 class="lesson-title">Multiplication</h2>
+      <p class="lesson-def">
+        Multiplication applies the algebraic distributive property (FOIL) combined with the substitution $i^2 = -1$.
+      </p>
+      <div class="lesson-formula-box">
+        $$(a + bi)(c + di) = (ac - bd) + (ad + bc)i$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: $(3 + 4i)(2 - i)$</div>
+        <p>Step 1: Distribute: $3(2) + 3(-i) + 4i(2) + 4i(-i) = 6 - 3i + 8i - 4i^2$<br>
+        Step 2: Replace $i^2 = -1$: $6 + 5i - 4(-1) = 6 + 5i + 4 = 10 + 5i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Multiplying only the corresponding terms $(a \times c) + (b \times d)i$. Always multiply all four cross-terms!
+      </div>
+      <a href="/?preset=mult_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 7 -->
+    <article class="lesson-card" id="lesson-7">
+      <span class="lesson-badge">Lesson 7</span>
+      <h2 class="lesson-title">Division Using Conjugates</h2>
+      <p class="lesson-def">
+        To divide by a nonzero complex number $c + di$, multiply both the numerator and the denominator by the complex conjugate of the denominator, $c - di$. This converts the denominator into a strictly positive real number $c^2 + d^2$.
+      </p>
+      <div class="lesson-formula-box">
+        $$\frac{a + bi}{c + di} = \frac{(a + bi)(c - di)}{(c + di)(c - di)} = \frac{(ac + bd) + (bc - ad)i}{c^2 + d^2}$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: $\frac{3 + 4i}{1 - 2i}$</div>
+        <p>Conjugate of denominator: $1 + 2i$.<br>
+        $\frac{(3 + 4i)(1 + 2i)}{(1 - 2i)(1 + 2i)} = \frac{3 + 6i + 4i + 8i^2}{1^2 - (2i)^2} = \frac{3 + 10i - 8}{1 + 4} = \frac{-5 + 10i}{5} = -1 + 2i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Dividing by zero. A complex denominator is zero if and only if both its real and imaginary parts are zero.
+      </div>
+      <a href="/?preset=div_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 8 -->
+    <article class="lesson-card" id="lesson-8">
+      <span class="lesson-badge">Lesson 8</span>
+      <h2 class="lesson-title">Complex Conjugates</h2>
+      <p class="lesson-def">
+        The complex conjugate of $z = a + bi$, written $\bar{z}$ or $z^*$, is formed by reversing the sign of the imaginary component: $\bar{z} = a - bi$. Geometrically, this represents a reflection across the horizontal real axis.
+      </p>
+      <div class="lesson-formula-box">
+        $$z = a + bi \implies \bar{z} = a - bi, \quad z + \bar{z} = 2\text{Re}(z), \quad z - \bar{z} = 2i\text{Im}(z), \quad z\bar{z} = |z|^2$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>If $z = 3 - 4i$, then $\bar{z} = 3 + 4i$.<br>
+        Identity check: $z\bar{z} = (3 - 4i)(3 + 4i) = 3^2 + 4^2 = 25$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Inverting the sign of the real part. The real part remains unchanged: $\overline{a + bi} = a - bi$, not $-a - bi$.
+      </div>
+      <a href="/?preset=conj_identities" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 9 -->
+    <article class="lesson-card" id="lesson-9">
+      <span class="lesson-badge">Lesson 9</span>
+      <h2 class="lesson-title">Modulus (Absolute Value)</h2>
+      <p class="lesson-def">
+        The modulus or absolute value $|z|$ of a complex number $z = a + bi$ measures the Euclidean distance from the origin $(0, 0)$ to the point $(a, b)$ in the complex plane. It is always a non-negative real scalar.
+      </p>
+      <div class="lesson-formula-box">
+        $$|z| = \sqrt{a^2 + b^2} = \sqrt{z \bar{z}}, \quad |z_1 z_2| = |z_1| |z_2|, \quad \left|\frac{z_1}{z_2}\right| = \frac{|z_1|}{|z_2|}$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Calculate $|3 - 4i|$</div>
+        <p>$|3 - 4i| = \sqrt{3^2 + (-4)^2} = \sqrt{9 + 16} = \sqrt{25} = 5$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Including $i$ inside the square: writing $\sqrt{a^2 + (bi)^2} = \sqrt{a^2 - b^2}$. The correct formula uses the square of the real coefficient $b^2$.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 10 -->
+    <article class="lesson-card" id="lesson-10">
+      <span class="lesson-badge">Lesson 10</span>
+      <h2 class="lesson-title">Argument & Principal Angle</h2>
+      <p class="lesson-def">
+        The argument $\arg(z)$ of a nonzero complex number is the counter-clockwise angle from the positive real axis to the vector representing $z$. The principal argument $\text{Arg}(z)$ is restricted to the interval $(-\pi, \pi]$ (or $(-180^\circ, 180^\circ]$).
+      </p>
+      <div class="lesson-formula-box">
+        $$\text{Arg}(z) = \text{atan2}(b, a) \in (-\pi, \pi], \quad \arg(z) = \text{Arg}(z) + 2k\pi \ (k \in \mathbb{Z})$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Find $\text{Arg}(-1 + i)$</div>
+        <p>The point $(-1, 1)$ lies in Quadrant II.<br>
+        $\theta = \arctan\left(\frac{1}{-1}\right) + \pi = -\frac{\pi}{4} + \pi = \frac{3\pi}{4} \ (135^\circ)$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> The argument of the zero complex number $z = 0$ is undefined, because the origin has no well-defined direction angle.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 11 -->
+    <article class="lesson-card" id="lesson-11">
+      <span class="lesson-badge">Lesson 11</span>
+      <h2 class="lesson-title">Rectangular Representation</h2>
+      <p class="lesson-def">
+        The rectangular (or Cartesian) form expresses a complex number as an algebraic sum of horizontal and vertical coordinates $z = a + bi$.
+      </p>
+      <div class="lesson-formula-box">
+        $$z = a + bi \longleftrightarrow (a, b) \in \mathbb{R}^2$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>Purely real numbers have $b = 0$, lying directly along the horizontal axis: $z = 5 + 0i = 5$. Purely imaginary numbers have $a = 0$, lying directly along the vertical axis: $z = 0 - 3i = -3i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Omitting the negative sign when formatting negative imaginary parts, e.g. writing $3 + -4i$ instead of $3 - 4i$.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 12 -->
+    <article class="lesson-card" id="lesson-12">
+      <span class="lesson-badge">Lesson 12</span>
+      <h2 class="lesson-title">Polar Representation</h2>
+      <p class="lesson-def">
+        Polar form characterizes a complex number by its magnitude (modulus $r$) and direction (argument $\theta$). In trigonometric notation, $z = r(\cos\theta + i\sin\theta)$.
+      </p>
+      <div class="lesson-formula-box">
+        $$z = r(\cos\theta + i\sin\theta) = r\text{ cis}(\theta), \quad r = |z| \ge 0, \quad \theta = \text{Arg}(z)$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Convert $1 + i$ to Polar</div>
+        <p>$r = \sqrt{1^2 + 1^2} = \sqrt{2}$.<br>
+        $\theta = \arctan(1/1) = \frac{\pi}{4} \ (45^\circ)$.<br>
+        Polar form: $\sqrt{2}\left(\cos\frac{\pi}{4} + i\sin\frac{\pi}{4}\right)$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Using a negative value for the radial distance $r$. In standard polar form, $r \ge 0$.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 13 -->
+    <article class="lesson-card" id="lesson-13">
+      <span class="lesson-badge">Lesson 13</span>
+      <h2 class="lesson-title">Exponential Form & Euler's Formula</h2>
+      <p class="lesson-def">
+        Euler's famous formula connects trigonometry and complex exponentials: $e^{i\theta} = \cos\theta + i\sin\theta$. Any complex number can therefore be written in compact exponential form as $z = r e^{i\theta}$.
+      </p>
+      <div class="lesson-formula-box">
+        $$z = r e^{i\theta}, \quad e^{i\pi} + 1 = 0 \quad (\text{Euler's Identity})$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Multiplication in Exponential Form</div>
+        <p>If $z_1 = 2e^{i\pi/3}$ and $z_2 = 3e^{i\pi/6}$, their product is simply:<br>
+        $z_1 z_2 = (2 \times 3) e^{i(\pi/3 + \pi/6)} = 6 e^{i\pi/2} = 6(0 + 1i) = 6i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Forgetting that $\theta$ in $e^{i\theta}$ must strictly be measured in radians, never degrees.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 14 -->
+    <article class="lesson-card" id="lesson-14">
+      <span class="lesson-badge">Lesson 14</span>
+      <h2 class="lesson-title">Powers of Complex Numbers</h2>
+      <p class="lesson-def">
+        Raising a complex number to an integer power $n$ scales its modulus by the $n$-th power and multiplies its argument by $n$.
+      </p>
+      <div class="lesson-formula-box">
+        $$(r e^{i\theta})^n = r^n e^{i n \theta}$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Evaluate $(1 + i)^8$</div>
+        <p>Polar form: $1 + i = \sqrt{2} e^{i\pi/4}$.<br>
+        $(1 + i)^8 = (\sqrt{2})^8 e^{i(8 \times \pi/4)} = 16 e^{i 2\pi} = 16(1 + 0i) = 16$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Expanding large powers algebraically with Pascal's triangle when polar form solves it in one line!
+      </div>
+      <a href="/?preset=power_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 15 -->
+    <article class="lesson-card" id="lesson-15">
+      <span class="lesson-badge">Lesson 15</span>
+      <h2 class="lesson-title">De Moivre's Theorem</h2>
+      <p class="lesson-def">
+        For any real number $\theta$ and any integer $n$, De Moivre's theorem provides a direct way to compute powers and trigonometric identities.
+      </p>
+      <div class="lesson-formula-box">
+        $$[\cos\theta + i\sin\theta]^n = \cos(n\theta) + i\sin(n\theta)$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>$[\cos(30^\circ) + i\sin(30^\circ)]^3 = \cos(90^\circ) + i\sin(90^\circ) = 0 + 1i = i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Applying the theorem directly to $r(\cos\theta + i\sin\theta)$ without raising the modulus $r$ to the power $n$. The full expression is $r^n(\cos n\theta + i\sin n\theta)$.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 16 -->
+    <article class="lesson-card" id="lesson-16">
+      <span class="lesson-badge">Lesson 16</span>
+      <h2 class="lesson-title">Square Roots and N-th Roots</h2>
+      <p class="lesson-def">
+        Every nonzero complex number $z = r e^{i\theta}$ has exactly $n$ distinct $n$-th roots, distributed symmetrically around a circle of radius $r^{1/n}$ with equal angular separation $\frac{2\pi}{n}$.
+      </p>
+      <div class="lesson-formula-box">
+        $$w_k = r^{1/n} \left[\cos\left(\frac{\theta + 2k\pi}{n}\right) + i\sin\left(\frac{\theta + 2k\pi}{n}\right)\right], \quad k = 0, 1, \dots, n-1$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Square roots of $-4$</div>
+        <p>$-4$ has $r = 4, \theta = \pi$.<br>
+        $k = 0 \implies w_0 = \sqrt{4} e^{i\pi/2} = 2i$<br>
+        $k = 1 \implies w_1 = \sqrt{4} e^{i(\pi + 2\pi)/2} = 2e^{i 3\pi/2} = -2i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Believing a nonzero complex number has only one square root. Every nonzero complex number has exactly two opposite square roots $\pm w_0$.
+      </div>
+      <a href="/?preset=sqrt_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 17 -->
+    <article class="lesson-card" id="lesson-17">
+      <span class="lesson-badge">Lesson 17</span>
+      <h2 class="lesson-title">Roots of Unity</h2>
+      <p class="lesson-def">
+        The $n$-th roots of unity are the $n$ distinct complex solutions to the algebraic equation $z^n = 1$. They form the vertices of a regular $n$-gon inscribed in the unit circle centered at the origin.
+      </p>
+      <div class="lesson-formula-box">
+        $$\omega_k = e^{i\frac{2k\pi}{n}} = \cos\left(\frac{2k\pi}{n}\right) + i\sin\left(\frac{2k\pi}{n}\right), \quad k = 0, 1, \dots, n-1$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Cube Roots of Unity ($n = 3$)</div>
+        <p>$\omega_0 = e^0 = 1$<br>
+        $\omega_1 = e^{i 2\pi/3} = -\frac{1}{2} + \frac{\sqrt{3}}{2}i$<br>
+        $\omega_2 = e^{i 4\pi/3} = -\frac{1}{2} - \frac{\sqrt{3}}{2}i$<br>
+        Note the fundamental property: $1 + \omega + \omega^2 = 0$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Forgetting that the sum of all $n$-th roots of unity is identically zero for any $n > 1$.
+      </div>
+      <a href="/?preset=roots_unity_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 18 -->
+    <article class="lesson-card" id="lesson-18">
+      <span class="lesson-badge">Lesson 18</span>
+      <h2 class="lesson-title">Reciprocal & Multiplicative Inverse</h2>
+      <p class="lesson-def">
+        The multiplicative inverse $z^{-1}$ of any nonzero complex number $z = a + bi$ satisfies $z \cdot z^{-1} = 1$. It can be computed directly by dividing the conjugate $\bar{z}$ by the squared modulus $|z|^2$.
+      </p>
+      <div class="lesson-formula-box">
+        $$z^{-1} = \frac{1}{z} = \frac{\bar{z}}{|z|^2} = \frac{a - bi}{a^2 + b^2} \quad (z \neq 0)$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Find $(3 + 4i)^{-1}$</div>
+        <p>$|z|^2 = 3^2 + 4^2 = 25$. Conjugate $\bar{z} = 3 - 4i$.<br>
+        $z^{-1} = \frac{3 - 4i}{25} = \frac{3}{25} - \frac{4}{25}i = 0.12 - 0.16i$.<br>
+        Verification: $(3 + 4i)(0.12 - 0.16i) = 0.36 + 0.64 + i(-0.48 + 0.48) = 1 + 0i = 1$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Zero has no multiplicative inverse. $1/0$ is undefined in the complex field $\mathbb{C}$.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 19 -->
+    <article class="lesson-card" id="lesson-19">
+      <span class="lesson-badge">Lesson 19</span>
+      <h2 class="lesson-title">Complex Linear & Quadratic Equations</h2>
+      <p class="lesson-def">
+        Linear equations $az + b = c$ and quadratic equations $az^2 + bz + c = 0$ with complex coefficients can be solved using algebraic isolation and the complex quadratic formula with square roots of the complex discriminant $\Delta = b^2 - 4ac$.
+      </p>
+      <div class="lesson-formula-box">
+        $$z = \frac{-b \pm \sqrt{\Delta}}{2a}, \quad \Delta = b^2 - 4ac$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example: Solve $z^2 - 2z + 5 = 0$</div>
+        <p>Coefficients: $a = 1, b = -2, c = 5$.<br>
+        Discriminant: $\Delta = (-2)^2 - 4(1)(5) = 4 - 20 = -16$.<br>
+        $\sqrt{\Delta} = \sqrt{-16} = \pm 4i$.<br>
+        Roots: $z = \frac{-(-2) \pm 4i}{2} = \frac{2 \pm 4i}{2} = 1 \pm 2i$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Assuming a quadratic equation with complex coefficients always produces conjugate pair roots. Conjugate pair roots occur only when the polynomial's coefficients are strictly real!
+      </div>
+      <a href="/?preset=quadratic_demo" class="btn btn-sm btn-outline">Try in Calculator →</a>
+    </article>
+
+    <!-- Lesson 20 -->
+    <article class="lesson-card" id="lesson-20">
+      <span class="lesson-badge">Lesson 20</span>
+      <h2 class="lesson-title">Geometric Interpretation on the Complex Plane</h2>
+      <p class="lesson-def">
+        The complex plane (Argand diagram) maps complex numbers to 2D vector geometry. Addition corresponds to the parallelogram law of vector addition, conjugation corresponds to reflection across the real axis, and multiplication by $r e^{i\theta}$ scales the vector by $r$ and rotates it counter-clockwise by $\theta$.
+      </p>
+      <div class="lesson-formula-box">
+        $$\text{Multiplication by } i \longleftrightarrow \text{Counter-Clockwise Rotation by } 90^\circ \ (\pi/2 \text{ rad})$$
+      </div>
+      <div class="worked-example-box">
+        <div class="lesson-section-title">Worked Example</div>
+        <p>Multiply $z = 2 + 1i$ by $i$:<br>
+        $i(2 + i) = 2i + i^2 = -1 + 2i$.<br>
+        Notice that vector $(2, 1)$ has rotated exactly $90^\circ$ counter-clockwise to $(-1, 2)$ while preserving its modulus $\sqrt{5}$.</p>
+      </div>
+      <div class="mistakes-box">
+        <strong>⚠️ Common Mistake:</strong> Viewing complex numbers merely as abstract algebraic symbols rather than dynamic geometric transformations in two dimensions.
+      </div>
+      <a href="/" class="btn btn-sm btn-outline">Explore on Complex Plane →</a>
+    </article>
+
+  </div>
+
+</div>
+{% endblock %}
