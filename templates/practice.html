@@ -1,0 +1,438 @@
+{% extends "base.html" %}
+
+{% block title %}ComplexLab - Practice & Exercises{% endblock %}
+
+{% block head_extra %}
+<style>
+  .practice-layout {
+    max-width: 860px;
+    margin: 1.5rem auto 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .stats-banner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .stat-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .stat-num {
+    font-size: 1.5rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--accent-primary);
+  }
+
+  .stat-lbl {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .pills-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .topic-pill, .diff-btn {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .topic-pill.active, .diff-btn.active {
+    background-color: var(--accent-primary);
+    color: #fff;
+    border-color: var(--accent-primary);
+    box-shadow: 0 2px 6px rgba(99, 102, 241, 0.25);
+  }
+
+  .question-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .question-badge {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-secondary);
+    background-color: var(--bg-tertiary);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+  }
+
+  .question-text {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    padding: 0.5rem 0;
+  }
+
+  .options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .option-btn {
+    background-color: var(--bg-tertiary);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 1.05rem;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .option-btn:hover {
+    border-color: var(--accent-secondary);
+    background-color: var(--bg-card);
+  }
+
+  .option-btn.selected {
+    border-color: var(--accent-primary);
+    background-color: rgba(99, 102, 241, 0.1);
+    color: var(--accent-primary);
+  }
+
+  .feedback-box {
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    display: none;
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .feedback-box.correct {
+    background-color: rgba(16, 185, 129, 0.12);
+    border: 1px solid var(--accent-success);
+    color: var(--accent-success);
+  }
+
+  .feedback-box.incorrect {
+    background-color: rgba(239, 68, 68, 0.12);
+    border: 1px solid var(--accent-danger);
+    color: var(--accent-danger);
+  }
+
+  .hint-box {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    font-size: 0.95rem;
+    display: none;
+  }
+
+  .solution-box {
+    background-color: var(--bg-card);
+    border: 2px solid var(--accent-primary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.15);
+    display: none;
+    animation: fadeIn 0.25s ease-out;
+  }
+
+  .practice-steps-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .practice-steps-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.75rem;
+  }
+
+  .practice-steps-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .practice-steps-count {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    background-color: rgba(99, 102, 241, 0.12);
+    color: var(--accent-primary);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-full);
+  }
+
+  .practice-steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .practice-step-card {
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.15s, border-color 0.15s;
+  }
+
+  .practice-step-card:hover {
+    border-color: var(--accent-secondary);
+  }
+
+  .practice-step-top {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+
+  .practice-step-num {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+    font-size: 0.8rem;
+    font-weight: 800;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .practice-step-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .practice-step-text {
+    font-size: 0.925rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .practice-step-math {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 1rem;
+    font-size: 1.1rem;
+    overflow-x: auto;
+    text-align: center;
+  }
+
+  .practice-final-answer-card {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(99, 102, 241, 0.12) 100%);
+    border: 2px solid var(--accent-success);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .final-badge {
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent-success);
+    background-color: rgba(16, 185, 129, 0.15);
+    padding: 0.35rem 0.85rem;
+    border-radius: var(--radius-full);
+  }
+
+  .final-answer-text {
+    font-size: 1.35rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .stats-banner {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .options-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="practiceAppContainer" class="practice-layout">
+
+  <!-- Header -->
+  <div style="text-align: center;">
+    <h1 class="hero-title" style="font-size: 2.1rem; margin-bottom: 0.4rem;">Practice & Exercises</h1>
+    <p style="color: var(--text-secondary); font-size: 1rem;">
+      Sharpen your complex number skills with interactive problems, detailed solutions, and instant verification.
+    </p>
+  </div>
+
+  <!-- Score Stats Banner -->
+  <div class="stats-banner">
+    <div class="stat-box">
+      <span class="stat-num" id="statStreak">0</span>
+      <span class="stat-lbl">Streak 🔥</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num" id="statCorrect">0</span>
+      <span class="stat-lbl">Correct</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num" id="statTotal">0</span>
+      <span class="stat-lbl">Attempted</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num" id="statAccuracy">0%</span>
+      <span class="stat-lbl">Accuracy</span>
+    </div>
+    <div>
+      <button type="button" class="btn btn-sm btn-outline" id="btnResetStats" title="Reset Statistics">Reset</button>
+    </div>
+  </div>
+
+  <!-- Topic & Difficulty Filters -->
+  <div class="filter-bar">
+    <div>
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem; text-transform: uppercase;">
+        Select Topic:
+      </div>
+      <div class="pills-group">
+        <button type="button" class="topic-pill active" data-topic="all">All Topics</button>
+        <button type="button" class="topic-pill" data-topic="arithmetic">Arithmetic (+, −, ×, ÷)</button>
+        <button type="button" class="topic-pill" data-topic="conjugate_modulus">Conjugate & Modulus</button>
+        <button type="button" class="topic-pill" data-topic="polar_exponential">Polar & Argument</button>
+        <button type="button" class="topic-pill" data-topic="powers_roots">Powers & Roots</button>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.35rem; text-transform: uppercase;">
+        Difficulty Level:
+      </div>
+      <div class="pills-group">
+        <button type="button" class="diff-btn active" data-diff="beginner">Beginner</button>
+        <button type="button" class="diff-btn" data-diff="intermediate">Intermediate</button>
+        <button type="button" class="diff-btn" data-diff="advanced">Advanced</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Interactive Question Card -->
+  <div class="question-card" id="questionCard">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span class="question-badge" id="questionBadge">Arithmetic • Beginner</span>
+      <span style="font-size: 0.8rem; color: var(--text-muted);">Mathematically Verified Problem</span>
+    </div>
+
+    <!-- Question Statement -->
+    <div class="question-text" id="questionText">
+      Loading problem...
+    </div>
+
+    <!-- Multiple Choice Options -->
+    <div class="options-grid" id="mcContainer" style="display: none;">
+      <!-- Populated dynamically -->
+    </div>
+
+    <!-- Free Input Form -->
+    <div id="freeInputContainer" style="display: none; flex-direction: column; gap: 0.5rem;">
+      <label for="practiceAnswerInput" style="font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);">
+        Enter your answer in standard form (e.g. 3 + 4i, -2i, 5):
+      </label>
+      <input type="text" id="practiceAnswerInput" class="math-input" placeholder="e.g. 5 + 2i" autocomplete="off">
+    </div>
+
+    <!-- Feedback Banner -->
+    <div class="feedback-box" id="practiceFeedback"></div>
+
+    <!-- Hint Box -->
+    <div class="hint-box" id="practiceHint"></div>
+
+    <!-- Worked Solution Box -->
+    <div class="solution-box" id="practiceSolution"></div>
+
+    <!-- Action Buttons -->
+    <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: space-between; align-items: center; margin-top: 0.5rem; border-top: 1px solid var(--border-color); padding-top: 1rem;">
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="btn btn-primary" id="btnCheckAnswer">
+          Check Answer
+        </button>
+        <button type="button" class="btn btn-secondary" id="btnNextQuestion">
+          Next Question →
+        </button>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button type="button" class="btn btn-outline btn-sm" id="btnShowHint">
+          💡 Hint
+        </button>
+        <button type="button" class="btn btn-outline btn-sm" id="btnRevealSolution">
+          📖 Reveal Solution
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/practice.js') }}"></script>
+{% endblock %}
